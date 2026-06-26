@@ -1,10 +1,10 @@
-package {{ group_id }}.grpc;
+package {{ root_package }}.grpc;
 
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
-import {{ group_id }}.api.v1.{{ PrefixName }}{{ SuffixName }}Grpc;
-import {{ group_id }}.api.v1.HealthRequest;
-import {{ group_id }}.api.v1.HealthResponse;
+import {{ root_package }}.api.v1.{{ PrefixName }}{{ SuffixName }}Grpc;
+import {{ root_package }}.api.v1.HealthRequest;
+import {{ root_package }}.api.v1.HealthResponse;
 
 @GRpcService
 public class {{ PrefixName }}{{ SuffixName }}GrpcService extends {{ PrefixName }}{{ SuffixName }}Grpc.{{ PrefixName }}{{ SuffixName }}ImplBase {

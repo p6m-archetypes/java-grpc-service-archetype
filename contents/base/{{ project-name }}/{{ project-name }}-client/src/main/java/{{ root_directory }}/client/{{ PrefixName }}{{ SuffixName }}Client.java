@@ -1,9 +1,9 @@
-package {{ group_id }}.client;
+package {{ root_package }}.client;
 
 import io.grpc.Channel;
-import {{ group_id }}.api.v1.{{ PrefixName }}{{ SuffixName }}Grpc;
-import {{ group_id }}.api.v1.HealthRequest;
-import {{ group_id }}.api.v1.HealthResponse;
+import {{ root_package }}.api.v1.{{ PrefixName }}{{ SuffixName }}Grpc;
+import {{ root_package }}.api.v1.HealthRequest;
+import {{ root_package }}.api.v1.HealthResponse;
 
 public class {{ PrefixName }}{{ SuffixName }}Client {
 
