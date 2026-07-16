@@ -3,6 +3,8 @@ spring:
     name: {{ project-name }}
 
 grpc:
+  # Enable gRPC Server Reflection so clients (grpcurl, tests) can discover services at runtime.
+  enable-reflection: true
   server:
     port: ${GRPC_PORT:{{ service_port }}}
 
