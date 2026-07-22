@@ -1,21 +1,33 @@
 spring:
   application:
     name: {{ project-name }}
+{% if has_persistence %}
+  profiles:
+    # The datasource lives in application-persistence.yaml; including the profile here means the
+    # platform's plain env contract (DB_HOST/DB_PORT/...) is enough — no profile env var needed.
+    include: persistence
+{% endif %}
 
 grpc:
   # Enable gRPC Server Reflection so clients (grpcurl, tests) can discover services at runtime.
   enable-reflection: true
-  server:
-    port: ${GRPC_PORT:{{ service_port }}}
+  # lognet's property is `grpc.port`; the platform injects GRPC_PORT.
+  port: ${GRPC_PORT:{{ service_port }}}
 
 server:
-  port: ${MANAGEMENT_PORT:{{ management_port }}}
+  # The embedded servlet only anchors the actuator; the platform probes the management server
+  # below on MANAGEMENT_PORT. With no MANAGEMENT_PORT override the two coincide and share a port.
+  port: {{ management_port }}
 
 management:
+  server:
+    port: ${MANAGEMENT_PORT:{{ management_port }}}
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        # prometheus only (not the JSON `metrics` endpoint): both would contend for the /metrics
+        # path below, and the platform scrapes Prometheus text.
+        include: health,info,prometheus
       base-path: /
       path-mapping:
         health: health
@@ -25,6 +37,13 @@ management:
       show-details: always
       probes:
         enabled: true
+{% if has_persistence %}
+      group:
+        readiness:
+          # Readiness reflects dependency truth (p6m standards S5): not ready until the database
+          # is reachable.
+          include: readinessState,db
+{% endif %}
   metrics:
     tags:
       application: {{ project-name }}

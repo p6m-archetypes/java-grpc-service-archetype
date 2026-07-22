@@ -23,6 +23,13 @@
             <artifactId>{{ project-name }}-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+{% if has_persistence %}
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>{{ project-name }}-persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+{% endif %}
         <dependency>
             <groupId>io.github.lognet</groupId>
             <artifactId>grpc-spring-boot-starter</artifactId>
