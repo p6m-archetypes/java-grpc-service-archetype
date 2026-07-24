@@ -8,6 +8,8 @@
 --- the hollow rendering is proven compilable by building its production Dockerfile here — no
 --- host toolchain is ever required.
 
+local p6m = require("p6m")
+
 local SRC = "."
 
 local BASE_ANSWERS = {
@@ -107,4 +109,16 @@ prova.group("java-grpc[None]:image", { requires = { "docker" } }, function(g)
     }
     t:expect(image, "built image ref"):never():is_empty()
   end)
+end)
+
+-- CI parity (S10): the rendered project's own Build workflow path — the build.yaml's single
+-- 'mvn verify --no-transfer-progress' on a fresh clone, in the toolchain image. The Dockerfile
+-- and CI are two independent build paths; S10 holds the second. The hollow render suffices:
+-- resource variants change dependencies, not the command path.
+prova.group("java-grpc[None]:ci", { requires = { "docker" }, tags = { "standards" } }, function(g)
+  p6m.standards.ci_parity(g, none_project, {
+    stack = "java",
+    project_dir = "example-service",
+    name = "java-grpc",
+  })
 end)
