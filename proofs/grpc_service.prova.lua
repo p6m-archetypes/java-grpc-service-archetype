@@ -32,7 +32,7 @@ end
 local PERSISTENCE_FILES = {
   "example-service-persistence/pom.xml",
   "example-service-persistence/src/main/java/acme/platform/exampleservice/persistence/PersistenceConfig.java",
-  "example-service-persistence/src/main/java/acme/platform/exampleservice/persistence/Example.java",
+  "example-service-persistence/src/main/java/acme/platform/exampleservice/persistence/ExampleEntity.java",
   "example-service-persistence/src/main/java/acme/platform/exampleservice/persistence/ExampleRepository.java",
   "example-service-persistence/src/main/resources/db/migration/V1__init.sql",
   "example-service-persistence/src/main/resources/db/migration/V2__create_examples.sql",
