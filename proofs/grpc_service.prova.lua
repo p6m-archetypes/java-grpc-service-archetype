@@ -13,12 +13,9 @@ local p6m = require("p6m")
 local SRC = "."
 
 local BASE_ANSWERS = {
-  author_name      = "Test Author",
-  author_email     = "test@example.com",
-  org_name         = "acme",
-  solution_name    = "platform",
-  prefix_name      = "Example",
-  suffix_name      = "Service",
+  project_name = "example-service",
+  solution_name = "acme-platform",
+  entity_name = "example",
   group_id         = "acme.platform",
   artifactory_host = "acme.jfrog.io",
   image_registry   = "ghcr.io/acme",
@@ -34,11 +31,11 @@ end
 -- Files the persistence scaffold adds (relative to the rendered project root). Absent from "None".
 local PERSISTENCE_FILES = {
   "example-service-persistence/pom.xml",
-  "example-service-persistence/src/main/java/acme/platform/example/persistence/PersistenceConfig.java",
-  "example-service-persistence/src/main/java/acme/platform/example/persistence/Item.java",
-  "example-service-persistence/src/main/java/acme/platform/example/persistence/ItemRepository.java",
+  "example-service-persistence/src/main/java/acme/platform/exampleservice/persistence/PersistenceConfig.java",
+  "example-service-persistence/src/main/java/acme/platform/exampleservice/persistence/Example.java",
+  "example-service-persistence/src/main/java/acme/platform/exampleservice/persistence/ExampleRepository.java",
   "example-service-persistence/src/main/resources/db/migration/V1__init.sql",
-  "example-service-persistence/src/main/resources/db/migration/V2__create_items.sql",
+  "example-service-persistence/src/main/resources/db/migration/V2__create_examples.sql",
   "example-service-server/src/main/resources/application-persistence.yaml",
 }
 
@@ -48,15 +45,15 @@ local BASE_FILES = {
   "example-service-bom/pom.xml",
   "example-service-core/pom.xml",
   "example-service-server/pom.xml",
-  "example-service-server/src/main/java/acme/platform/example/server/Application.java",
+  "example-service-server/src/main/java/acme/platform/exampleservice/server/Application.java",
   "example-service-server/src/main/resources/application.yaml",
   "example-service-integration-tests/pom.xml",
   "example-service-api/pom.xml",
   "example-service-api/src/main/proto/example_service.proto",
   "example-service-grpc/pom.xml",
-  "example-service-grpc/src/main/java/acme/platform/example/grpc/ExampleServiceGrpcService.java",
+  "example-service-grpc/src/main/java/acme/platform/exampleservice/grpc/ExampleServiceGrpcService.java",
   "example-service-client/pom.xml",
-  "example-service-client/src/main/java/acme/platform/example/client/ExampleServiceClient.java",
+  "example-service-client/src/main/java/acme/platform/exampleservice/client/ExampleServiceClient.java",
   ".dockerignore",
   ".github/workflows/build.yaml",
 }
@@ -83,7 +80,7 @@ local none_project = prova.fixture("java-grpc[None]:project", Scope.File, functi
   return archetect.render{
     source = SRC,
     answers = answers_with{ persistence = "None" },
-    destination = ctx:tempdir(),
+    destination = ctx:tempdir("render1"),
     defaults = true,
   }
 end)

@@ -32,7 +32,7 @@ message Get{{ EntityName }}Request {
 message List{{ EntityName }}sRequest {}
 
 message List{{ EntityName }}sResponse {
-    repeated {{ EntityName }} items = 1;
+    repeated {{ EntityName }} {{ entity_name }}s = 1;
 }
 
 message Update{{ EntityName }}Request {

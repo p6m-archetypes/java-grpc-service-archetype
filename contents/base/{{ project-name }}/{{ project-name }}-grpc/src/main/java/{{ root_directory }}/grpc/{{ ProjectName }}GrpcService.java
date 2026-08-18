@@ -5,8 +5,8 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
-import {{ group_id }}.persistence.Item;
-import {{ group_id }}.persistence.ItemRepository;
+import {{ group_id }}.persistence.{{ EntityName }};
+import {{ group_id }}.persistence.{{ EntityName }}Repository;
 import {{ root_package }}.api.v1.Create{{ EntityName }}Request;
 import {{ root_package }}.api.v1.Delete{{ EntityName }}Request;
 import {{ root_package }}.api.v1.Delete{{ EntityName }}Response;
@@ -24,13 +24,13 @@ import {{ root_package }}.api.v1.{{ ProjectName }}Grpc;
 @GRpcService
 public class {{ ProjectName }}GrpcService extends {{ ProjectName }}Grpc.{{ ProjectName }}ImplBase {
 
-    private final ItemRepository repository;
+    private final {{ EntityName }}Repository repository;
 
-    public {{ ProjectName }}GrpcService(ItemRepository repository) {
+    public {{ ProjectName }}GrpcService({{ EntityName }}Repository repository) {
         this.repository = repository;
     }
 
-    private static {{ EntityName }} toProto(Item item) {
+    private static {{ EntityName }} toProto({{ EntityName }} item) {
         return {{ EntityName }}.newBuilder()
                 .setId(item.getId())
                 .setDisplayName(item.getDisplayName())
@@ -43,7 +43,7 @@ public class {{ ProjectName }}GrpcService extends {{ ProjectName }}Grpc.{{ Proje
 
     @Override
     public void create{{ EntityName }}(Create{{ EntityName }}Request request, StreamObserver<{{ EntityName }}> responseObserver) {
-        Item saved = repository.save(new Item(request.getDisplayName()));
+        {{ EntityName }} saved = repository.save(new {{ EntityName }}(request.getDisplayName()));
         responseObserver.onNext(toProto(saved));
         responseObserver.onCompleted();
     }
