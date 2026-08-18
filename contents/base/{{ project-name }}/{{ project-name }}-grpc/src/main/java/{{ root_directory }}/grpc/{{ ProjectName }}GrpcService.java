@@ -7,31 +7,31 @@ import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import {{ group_id }}.persistence.Item;
 import {{ group_id }}.persistence.ItemRepository;
-import {{ root_package }}.api.v1.Create{{ PrefixName }}Request;
-import {{ root_package }}.api.v1.Delete{{ PrefixName }}Request;
-import {{ root_package }}.api.v1.Delete{{ PrefixName }}Response;
-import {{ root_package }}.api.v1.Get{{ PrefixName }}Request;
-import {{ root_package }}.api.v1.List{{ PrefixName }}sRequest;
-import {{ root_package }}.api.v1.List{{ PrefixName }}sResponse;
-import {{ root_package }}.api.v1.Update{{ PrefixName }}Request;
-import {{ root_package }}.api.v1.{{ PrefixName }};
-import {{ root_package }}.api.v1.{{ PrefixName }}{{ SuffixName }}Grpc;
+import {{ root_package }}.api.v1.Create{{ EntityName }}Request;
+import {{ root_package }}.api.v1.Delete{{ EntityName }}Request;
+import {{ root_package }}.api.v1.Delete{{ EntityName }}Response;
+import {{ root_package }}.api.v1.Get{{ EntityName }}Request;
+import {{ root_package }}.api.v1.List{{ EntityName }}sRequest;
+import {{ root_package }}.api.v1.List{{ EntityName }}sResponse;
+import {{ root_package }}.api.v1.Update{{ EntityName }}Request;
+import {{ root_package }}.api.v1.{{ EntityName }};
+import {{ root_package }}.api.v1.{{ ProjectName }}Grpc;
 
 /**
  * The standard CRUD surface (p6m standards S2) over the {@code { id, display_name }} entity,
  * backed by the persistence module. Unknown ids answer {@code NOT_FOUND}.
  */
 @GRpcService
-public class {{ PrefixName }}{{ SuffixName }}GrpcService extends {{ PrefixName }}{{ SuffixName }}Grpc.{{ PrefixName }}{{ SuffixName }}ImplBase {
+public class {{ ProjectName }}GrpcService extends {{ ProjectName }}Grpc.{{ ProjectName }}ImplBase {
 
     private final ItemRepository repository;
 
-    public {{ PrefixName }}{{ SuffixName }}GrpcService(ItemRepository repository) {
+    public {{ ProjectName }}GrpcService(ItemRepository repository) {
         this.repository = repository;
     }
 
-    private static {{ PrefixName }} toProto(Item item) {
-        return {{ PrefixName }}.newBuilder()
+    private static {{ EntityName }} toProto(Item item) {
+        return {{ EntityName }}.newBuilder()
                 .setId(item.getId())
                 .setDisplayName(item.getDisplayName())
                 .build();
@@ -42,14 +42,14 @@ public class {{ PrefixName }}{{ SuffixName }}GrpcService extends {{ PrefixName }
     }
 
     @Override
-    public void create{{ PrefixName }}(Create{{ PrefixName }}Request request, StreamObserver<{{ PrefixName }}> responseObserver) {
+    public void create{{ EntityName }}(Create{{ EntityName }}Request request, StreamObserver<{{ EntityName }}> responseObserver) {
         Item saved = repository.save(new Item(request.getDisplayName()));
         responseObserver.onNext(toProto(saved));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void get{{ PrefixName }}(Get{{ PrefixName }}Request request, StreamObserver<{{ PrefixName }}> responseObserver) {
+    public void get{{ EntityName }}(Get{{ EntityName }}Request request, StreamObserver<{{ EntityName }}> responseObserver) {
         repository.findById(request.getId()).ifPresentOrElse(
                 item -> {
                     responseObserver.onNext(toProto(item));
@@ -59,15 +59,15 @@ public class {{ PrefixName }}{{ SuffixName }}GrpcService extends {{ PrefixName }
     }
 
     @Override
-    public void list{{ PrefixName }}s(List{{ PrefixName }}sRequest request, StreamObserver<List{{ PrefixName }}sResponse> responseObserver) {
-        List{{ PrefixName }}sResponse.Builder response = List{{ PrefixName }}sResponse.newBuilder();
+    public void list{{ EntityName }}s(List{{ EntityName }}sRequest request, StreamObserver<List{{ EntityName }}sResponse> responseObserver) {
+        List{{ EntityName }}sResponse.Builder response = List{{ EntityName }}sResponse.newBuilder();
         repository.findAll().forEach(item -> response.addItems(toProto(item)));
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     }
 
     @Override
-    public void update{{ PrefixName }}(Update{{ PrefixName }}Request request, StreamObserver<{{ PrefixName }}> responseObserver) {
+    public void update{{ EntityName }}(Update{{ EntityName }}Request request, StreamObserver<{{ EntityName }}> responseObserver) {
         repository.findById(request.getId()).ifPresentOrElse(
                 item -> {
                     item.setDisplayName(request.getDisplayName());
@@ -78,19 +78,19 @@ public class {{ PrefixName }}{{ SuffixName }}GrpcService extends {{ PrefixName }
     }
 
     @Override
-    public void delete{{ PrefixName }}(Delete{{ PrefixName }}Request request, StreamObserver<Delete{{ PrefixName }}Response> responseObserver) {
+    public void delete{{ EntityName }}(Delete{{ EntityName }}Request request, StreamObserver<Delete{{ EntityName }}Response> responseObserver) {
         if (!repository.existsById(request.getId())) {
             responseObserver.onError(notFound(request.getId()));
             return;
         }
         repository.deleteById(request.getId());
-        responseObserver.onNext(Delete{{ PrefixName }}Response.getDefaultInstance());
+        responseObserver.onNext(Delete{{ EntityName }}Response.getDefaultInstance());
         responseObserver.onCompleted();
     }
 }
 {% else %}
 import org.lognet.springboot.grpc.GRpcService;
-import {{ root_package }}.api.v1.{{ PrefixName }}{{ SuffixName }}Grpc;
+import {{ root_package }}.api.v1.{{ ProjectName }}Grpc;
 
 /**
  * The standard API surface (p6m standards S2), unimplemented until a persistence flavor backs it:
@@ -98,6 +98,6 @@ import {{ root_package }}.api.v1.{{ PrefixName }}{{ SuffixName }}Grpc;
  * ({@code grpc.health.v1.Health}) and server reflection are served by the runtime regardless.
  */
 @GRpcService
-public class {{ PrefixName }}{{ SuffixName }}GrpcService extends {{ PrefixName }}{{ SuffixName }}Grpc.{{ PrefixName }}{{ SuffixName }}ImplBase {
+public class {{ ProjectName }}GrpcService extends {{ ProjectName }}Grpc.{{ ProjectName }}ImplBase {
 }
 {% endif %}
