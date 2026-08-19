@@ -5,7 +5,7 @@ frameworks: ["Spring Boot", "gRPC", "grpc-spring-boot-starter"]
 tags: ["grpc", "service", "maven"]
 
 requires:
-  archetect: "3.0.0"
+  archetect: "3.4.3"
 
 templating:
   trim_blocks: true
